@@ -30,6 +30,6 @@ public class EvalAnswer {
     EvalAnswer(EvalQuery evalQuery, Product product) {
         this.evalQuery = evalQuery;
         this.product = product;
-        this.evalAnswerId = new EvalAnswerId(evalQuery.getEvalQueryId(), product.getId());
+        this.evalAnswerId = new EvalAnswerId(evalQuery.getEvalQueryId(), product.getProductId());
     }
 }

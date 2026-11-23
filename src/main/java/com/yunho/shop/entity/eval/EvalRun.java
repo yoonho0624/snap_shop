@@ -25,7 +25,10 @@ public class EvalRun extends BaseCreatedTimeEntity {
     private String embeddingModel;
     private String promptVersion;
     private int queryCount;
+
+    @Column(name = "recall_at_10")
     private BigDecimal recallAt10;
+
     private Integer p95Ms;
 
     @Builder

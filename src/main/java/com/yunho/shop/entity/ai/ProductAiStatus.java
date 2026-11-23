@@ -52,11 +52,15 @@ public class ProductAiStatus {
 
     public ProductAiStatus(Product product, int imageVersion) {
         this.product = product;
-        reset(imageVersion);
+        applyReset(imageVersion);
     }
 
     /** 대표 이미지가 바뀌면 새 버전으로 처음부터 다시 */
     public void reset(int imageVersion) {
+        applyReset(imageVersion);
+    }
+
+    private void applyReset(int imageVersion) {
         this.imageVersion = imageVersion;
         this.embeddingStatus = AiTaskStatus.PENDING;
         this.taggingStatus = AiTaskStatus.PENDING;
