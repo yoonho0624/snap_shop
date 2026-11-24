@@ -92,7 +92,7 @@ public class ProductService {
     }
 
     public ProductDetailResponse getProduct(Long productId) {
-        Product product = productRepository.findDetailById(productId)
+        Product product = productRepository.findDetailByProductId(productId)
                 .filter(p -> p.getSaleStatus() != SaleStatus.HIDDEN)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
         return ProductDetailResponse.from(product);

@@ -46,5 +46,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             where p.productId = :productId
               and p.deletedAt is null
             """)
-    Optional<Product> findDetailById(@Param("productId") Long productId);
+    Optional<Product> findDetailByProductId(@Param("productId") Long productId);
 }
