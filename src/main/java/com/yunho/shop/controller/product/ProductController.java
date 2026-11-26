@@ -25,7 +25,7 @@ public class ProductController {
         @GetMapping
         public PageResponse<ProductSummaryResponse> getProducts(
                 @RequestParam(required = false) Long categoryId,
-                @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+                @PageableDefault(size = 20, sort = "productId", direction = Sort.Direction.DESC) Pageable pageable
     ) {
             return productService.getProducts(categoryId, pageable);
         }

@@ -1,23 +1,25 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: shop-db
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      TZ: Asia/Seoul
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-    ports:
-      - "3307:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+  # 로컬 DB 컨테이너 (현재 미사용 - 클라우드 DB 사용 중)
+  # 오프라인에서 작업할 때는 주석을 풀고 app의 DB_URL을 db:3306으로 바꾸면 됨
+  # db:
+  #   image: mysql:8.0
+  #   container_name: shop-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${DB_NAME}
+  #     TZ: Asia/Seoul
+  #   command:
+  #     - --character-set-server=utf8mb4
+  #     - --collation-server=utf8mb4_unicode_ci
+  #   ports:
+  #     - "3307:3306"
+  #   volumes:
+  #     - db-data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 10
 
   app:
     build: .
@@ -25,16 +27,16 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:mysql://db:3306/${DB_NAME}?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-      DB_USERNAME: root
-      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      # db-tunnel.bat이 열어 둔 내 PC의 3308 → GCP VM MySQL
+      DB_URL: jdbc:mysql://host.docker.internal:${TUNNEL_PORT:-3308}/${DB_NAME}?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: ${CLOUD_DB_USERNAME}
+      DB_PASSWORD: ${CLOUD_DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       DDL_AUTO: update
     volumes:
       - ./uploads:/app/uploads
-    depends_on:
-      db:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
-  db-data:
+  db-data:   # 로컬 DB 데이터 보존용 (지우지 않음)

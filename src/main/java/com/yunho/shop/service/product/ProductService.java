@@ -85,7 +85,7 @@ public class ProductService {
     }
 
     public PageResponse<ProductSummaryResponse> getProducts(Long categoryId, Pageable pageable) {
-        return PageResponse.of(
+        return PageResponse.from(
                 productRepository.findDisplayProducts(categoryId, pageable)
                         .map(ProductSummaryResponse::from)
         );

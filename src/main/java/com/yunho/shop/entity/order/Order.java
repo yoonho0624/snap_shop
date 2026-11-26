@@ -54,6 +54,7 @@ public class Order {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orderItemId ASC")
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Builder
@@ -85,9 +86,18 @@ public class Order {
         changeStatus(OrderStatus.SHIPPING, OrderStatus.DELIVERED);
     }
 
+    // PENDING, PAID일 때만 취소할 수 있다
+    public boolean isCancelable() {
+        return status == OrderStatus.PENDING || status == OrderStatus.PAID;
+    }
+
+    public boolean isCanceled() {
+        return status == OrderStatus.CANCELED;
+    }
+
     public void cancel() {
-        if (status != OrderStatus.PENDING && status != OrderStatus.PAID) {
-            throw new IllegalStateException("배송이 시작된 주문은 취소할 수 없습니다. (현재 상태: " + status + ")");
+        if (!isCancelable()) {
+            throw new IllegalStateException("취소할 수 없는 상태입니다. (현재 상태: " + status + ")");
         }
         this.status = OrderStatus.CANCELED;
     }

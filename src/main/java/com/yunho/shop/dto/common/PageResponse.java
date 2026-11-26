@@ -17,7 +17,7 @@ public record PageResponse<T>(
         boolean hasNext
 ) {
 
-    public static <T> PageResponse<T> of(Page<T> page) {
+    public static <T> PageResponse<T> from(Page<T> page) {
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
